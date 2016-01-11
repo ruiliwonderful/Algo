@@ -111,7 +111,7 @@ public class TreeTraverse {
 		TreeNode currNode = root;
 		boolean foundFlag = false;
 		boolean leftFlag = false;
-		while (true) {
+		while (currNode!=null) {
 			if (currNode.val == value) {
 				foundFlag = true;
 				break;
