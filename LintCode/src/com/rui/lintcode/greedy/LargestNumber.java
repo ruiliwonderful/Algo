@@ -17,7 +17,6 @@ public class LargestNumber {
 
 		Collections.sort(allNumbers, new Comparator<String>() {
 
-			@Override
 			public int compare(String o1, String o2) {
 				char[] arr1 = o1.toString().toCharArray();
 				char[] arr2 = o2.toString().toCharArray();

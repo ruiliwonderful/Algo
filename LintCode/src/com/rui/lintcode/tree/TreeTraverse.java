@@ -8,9 +8,7 @@ public class TreeTraverse {
 
 	public List<Integer> preOrder(TreeNode root) {
 		TreeNode currNode = root;
-
 		ArrayList<Integer> result = new ArrayList<Integer>();
-
 		Stack<TreeNode> s = new Stack<TreeNode>();
 
 		while (true) {
@@ -101,12 +99,13 @@ public class TreeTraverse {
 
 	// http://www.lintcode.com/en/problem/remove-node-in-binary-search-tree/
 	public TreeNode removeNodeFromBST(TreeNode root, int value) {
-		
-		if(root.left==null&&root.right==null&&root.val==value) return null;
-		
-		TreeNode fakePreRoot=new TreeNode(0);
-		fakePreRoot.left=root;
-		fakePreRoot.right=root;
+
+		if (root.left == null && root.right == null && root.val == value)
+			return null;
+
+		TreeNode fakePreRoot = new TreeNode(0);
+		fakePreRoot.left = root;
+		fakePreRoot.right = root;
 		TreeNode parentNode = fakePreRoot;
 		TreeNode currNode = root;
 		boolean foundFlag = false;
@@ -167,5 +166,100 @@ public class TreeTraverse {
 		}
 
 		return curr.val;
+	}
+
+	// www.lintcode.com/en/problem/binary-tree-serialization/
+	public String serialize(TreeNode root) {
+		StringBuffer sb = new StringBuffer();
+		Stack<TreeNode> s = new Stack<TreeNode>();
+		TreeNode node = root;
+		while (true) {
+			if (node != null) {
+				sb.append(node.val).append(",");
+				s.push(node);
+				node = node.left;
+				if (node == null)
+					sb.append("#").append(",");
+
+			} else {
+				if (!s.isEmpty()) {
+					node = s.pop();
+					node = node.right;
+					if (node == null)
+						sb.append("#").append(",");
+
+				} else
+					break;
+			}
+		}
+
+		return sb.toString();
+	}
+
+	public TreeNode dederialize(String data) {
+	    if (data==null||data.trim().equals("")) return null;
+		String[] arr = data.split(",");
+		int len = arr.length;
+		TreeNode root = null;
+		if (len > 0) {
+			
+			root = new TreeNode(Integer.parseInt(arr[0]));
+			TreeNode node = root;
+			Stack<TreeNode> s = new Stack<TreeNode>();
+			int i = 1;
+			s.push(node);
+			while (i < len) {
+				if (node != null) {
+					if (!arr[i].equals("#")) {						
+						node.left = new TreeNode(Integer.parseInt(arr[i]));
+						node = node.left;
+						s.push(node);
+					} else
+						node = null;
+				}
+
+				else {
+					if(!s.isEmpty())node = s.pop();
+					else break;
+					if (!arr[i].equals("#")) {
+						node.right = new TreeNode(Integer.parseInt(arr[i]));
+						node = node.right;
+						s.push(node);
+					} else
+						node = null;
+				}
+				i++;
+			}
+
+			
+		}
+		return root;
+	}
+	
+	
+	
+	public static void main(String args[]){
+		TreeTraverse tt=new TreeTraverse();
+		
+		TreeNode t1root=new TreeNode(1);
+		TreeNode node1=new TreeNode(2);
+		TreeNode node2=new TreeNode(3);
+		
+		t1root.right=node1;
+		node1.right=node2;
+		
+		System.out.println(tt.serialize(t1root));
+     	String s1="1,#,2,#,3,#,#,";
+		System.out.println(tt.serialize(tt.dederialize(s1)));
+		System.out.println(s1.equals(tt.serialize(tt.dederialize(s1))));
+		String s2="123####";
+		System.out.println(tt.serialize(tt.dederialize(s2)));
+		System.out.println(s2.equals(tt.serialize(tt.dederialize(s2))));
+		String s3="12#3###";
+		System.out.println(tt.serialize(tt.dederialize(s3)));
+		System.out.println(s3.equals(tt.serialize(tt.dederialize(s3))));
+		String s4="1#2#3##";
+		System.out.println(tt.serialize(tt.dederialize(s4)));
+		System.out.println(s4.equals(tt.serialize(tt.dederialize(s4))));
 	}
 }
