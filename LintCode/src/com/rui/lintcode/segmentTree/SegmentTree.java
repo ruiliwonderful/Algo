@@ -1,6 +1,6 @@
 package com.rui.lintcode.segmentTree;
 
-public class SegmentTreeNode {
+class SegmentTreeNode{
 	public int start, end, max;
 	public SegmentTreeNode left, right;
 
@@ -10,6 +10,8 @@ public class SegmentTreeNode {
 		this.max = max;
 		this.left = this.right = null;
 	}
+}
+public class SegmentTree {
 
 	public SegmentTreeNode build(int[] A) {
 		int len = A.length;
@@ -47,5 +49,39 @@ public class SegmentTreeNode {
 		} else
 			return null;
 
+	}
+	
+	//http://www.lintcode.com/en/problem/segment-tree-query/
+	public int query(SegmentTreeNode root, int start, int end) {
+        if(start==root.start && end==root.end){
+            return root.max;
+        }
+        if(start>=root.start && end<=root.end){
+            //if in the left side
+            if(root.left!=null && start>=root.left.start && end<= root.left.end){
+                return query(root.left,start,end);
+            }
+            //if in the right side
+             if(root.right!=null && start>=root.right.start && end<= root.right.end){
+                return query(root.right,start,end);
+            }
+            //if in both side
+            if(root.left!=null && root.right!=null&& start>=root.left.start && end> root.left.end &&end<=root.right.end){
+                int leftmax=query(root.left,start,root.left.end);
+                int rightmax=query(root.right, root.right.start,end);
+                return Math.max(leftmax,rightmax);
+            }
+            return 0;
+        }
+        
+    return 0;
+    }
+	
+	public static void main(String args[]){
+		SegmentTree sg=new SegmentTree();
+		int[] arr={1,4,2,3};
+		SegmentTreeNode root=sg.build(arr);
+		sg.query(root, 1, 2);
+		
 	}
 }

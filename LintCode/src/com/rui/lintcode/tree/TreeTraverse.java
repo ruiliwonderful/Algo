@@ -1,6 +1,8 @@
 package com.rui.lintcode.tree;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -104,6 +106,47 @@ public class TreeTraverse {
 	    
 	}
 
+	 
+	 public ArrayList<ArrayList<Integer>> ziglevelOrder(TreeNode root){
+
+         ArrayList<ArrayList<Integer>> result=new ArrayList<ArrayList<Integer>>();
+     if(root==null) return result;
+     
+     Queue<TreeNode> allNodes=new LinkedList<TreeNode>();
+     allNodes.add(root);
+     allNodes.add(new TreeNode(Integer.MAX_VALUE));
+     
+     ArrayList<Integer> oneLevel=new ArrayList<Integer>();
+     
+     while(!allNodes.isEmpty()){
+         TreeNode currNode=allNodes.poll();
+         if(currNode.val!=Integer.MAX_VALUE){
+             if(currNode.left!=null) allNodes.add(currNode.left);
+             if(currNode.right!=null) allNodes.add(currNode.right);
+             oneLevel.add(currNode.val);
+         }
+         else{
+             result.add(new ArrayList<Integer>(oneLevel));
+             oneLevel=new ArrayList<Integer>();
+             if(allNodes.peek()!=null) 
+             allNodes.add(new TreeNode(Integer.MAX_VALUE));
+         }
+     }
+     ArrayList<ArrayList<Integer>> finalResult=new ArrayList<ArrayList<Integer>>();
+     for(int i=result.size()-1;i>=0;i--){
+         if(i%2!=0) {
+        	 Collections.reverse(result.get(i));
+        	// finalResult.add(new ArrayList<Integer>(result.get(i)));
+         }
+    	 finalResult.add(new ArrayList<Integer>(result.get(i)));
+     }
+     
+     return result;
+ 
+		 
+	 }
+	 
+	 
 	// http://www.lintcode.com/en/problem/construct-binary-tree-from-preorder-and-inorder-traversal/
 	public TreeNode buildTree(int[] preorder, int[] inorder) {
 		TreeNode root = null;
@@ -282,12 +325,12 @@ public class TreeTraverse {
 	public static void main(String args[]){
 		TreeTraverse tt=new TreeTraverse();
 		
-		TreeNode t1root=new TreeNode(5);
-		TreeNode node1=new TreeNode(1);
-		//TreeNode node2=new TreeNode(3);
+		TreeNode t1root=new TreeNode(1);
+		TreeNode node1=new TreeNode(2);
+		TreeNode node2=new TreeNode(3);
 		t1root.left=node1;
-		
-		tt.removeNodeFromBST(t1root, 5);
-	
+		t1root.right=node2;
+		//tt.removeNodeFromBST(t1root, 5);
+		tt.ziglevelOrder(t1root);
 	}
 }
